@@ -35,6 +35,20 @@ def preprocess_data(df, config):
     
     # --- Data Cleaning and Correction ---
     
+    numerical_cols = ['Temperature', 'Humidity', 'CO2_InfraredSensor', 'CO2_ElectroChemicalSensor',
+                     'MetalOxideSensor_Unit1', 'MetalOxideSensor_Unit2', 'MetalOxideSensor_Unit3',
+                     'MetalOxideSensor_Unit4']
+    categorical_cols = ['CO_GasSensor', 'HVAC Operation Mode', 'Time of Day']
+
+    # Remove outliers using IQR
+    for col in numerical_cols:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        df = df[~((df[col] < (Q1 - 1.5 * IQR)) | (df[col] > (Q3 + 1.5 * IQR)))]
+
+# Feature engineering
+
     # Put "Activity Level" to the proper expressions.
     mode_Activity_Level_mapping = {
         'Low Activity': 'Low Activity',

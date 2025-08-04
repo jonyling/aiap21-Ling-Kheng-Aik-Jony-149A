@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 import joblib
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -27,7 +29,7 @@ def build_pipelines(config):
     numerical_features = config.get("numerical_features", ['Temperature_x_Humidity', 'CO2_sum', 'MetalOxideSensor_sum'])
     nominal_features = config.get("nominal_features", ['HVAC Operation Mode'])
     ordinal_features = config.get("ordinal_features", ['Time of Day', 'Session_ID_Bands', 'CO_GasSensor'])
-
+    
     numerical_transformer = Pipeline(steps=[('scaler', StandardScaler())])
     nominal_transformer = Pipeline(steps=[('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))])
     ordinal_transformer = Pipeline(steps=[
@@ -192,7 +194,7 @@ def get_preprocessor_feature_names(fitted_preprocessor):
     """
     return fitted_preprocessor.get_feature_names_out()
 
-def analyze_feature_importance(pipeline, X_train, y_train, model_name, class_labels):
+def analyze_feature_importance(pipeline,  model_name):
     """
     Analyzes and displays feature importances for tree-based models.
     """
@@ -219,12 +221,13 @@ def analyze_feature_importance(pipeline, X_train, y_train, model_name, class_lab
         plt.title(f'Top 10 Feature Importances for {model_name}')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
-        plt.show()
+        plt.savefig(f'models/{model_name}_feature_importance.png')
+        plt.close()  # Ensure the plot is closed to free resources
 
     else:
         print(f"Warning: {model_name} does not have a feature_importances_ attribute.")
 
-def analyze_logistic_regression_coefficients(pipeline, X_train, y_train, class_labels):
+def analyze_logistic_regression_coefficients(pipeline, class_labels):
     """
     Analyzes and displays coefficients for each class in a Logistic Regression model.
     This helps to understand which features contribute positively or negatively to each class.
@@ -241,6 +244,10 @@ def analyze_logistic_regression_coefficients(pipeline, X_train, y_train, class_l
     if hasattr(classifier, 'coef_'):
         coefficients = classifier.coef_
         num_classes = coefficients.shape[0]
+        base_path = 'models'  # Relative path
+        os.makedirs(base_path, exist_ok=True)  # Ensure models directory exists
+        current_dir = os.getcwd()  # Debug: Print current working directory
+        print(f"Current working directory: {current_dir}")  # Debug: Confirm directory
         
         for i in range(num_classes):
             print(f"Top 10 features for '{class_labels[i]}' (Class {i}):\n")
@@ -252,14 +259,21 @@ def analyze_logistic_regression_coefficients(pipeline, X_train, y_train, class_l
             class_coef_df = class_coef_df.sort_values(by='abs_coefficient', ascending=False)
 
             print(class_coef_df.drop('abs_coefficient', axis=1).head(10))
-            
-            # Plotting the coefficients
-            plt.figure(figsize=(12, 8))
-            sns.barplot(x='coefficient', y='feature', data=class_coef_df.head(10))
-            plt.title(f'Top 10 Feature Coefficients for class "{class_labels[i]}"')
-            plt.xlabel('Coefficient Value')
-            plt.ylabel('Feature')
-            plt.show()
+
+            # Plotting the coefficients with error handling
+            try:
+                plt.figure(figsize=(12, 8))
+                sns.barplot(x='coefficient', y='feature', data=class_coef_df.head(10))
+                plt.title(f'Top 10 Feature Coefficients for class "{class_labels[i]}"')
+                plt.xlabel('Coefficient Value')
+                plt.ylabel('Feature')
+                file_path = os.path.join(base_path, f'LogisticRegression_{class_labels[i].replace(" ", "_")}_coefficients.png')
+                print(f"Attempting to save plot to: {file_path}")  # Debug: Confirm file path
+                plt.savefig(file_path)
+                plt.close()
+                print(f"Successfully saved plot for {class_labels[i]} to {file_path}")
+            except Exception as e:
+                print(f"Error saving plot for {class_labels[i]}: {e}")
             
             print("-------------------------------------------------------------------\n")
     else:
@@ -288,9 +302,9 @@ def main():
 
     # Analyze feature importance
     class_labels = ['Low Activity', 'Moderate Activity', 'High Activity']
-    analyze_feature_importance(pipelines['RandomForest'], X_train, 'RandomForest', class_labels)
-    analyze_feature_importance(pipelines['XGBoost'], X_train, 'XGBoost', class_labels)
-    analyze_logistic_regression_coefficients(pipelines['LogisticRegression'], X_train, class_labels)
+    analyze_feature_importance(pipelines['RandomForest'], 'RandomForest')
+    analyze_feature_importance(pipelines['XGBoost'], 'XGBoost')
+    analyze_logistic_regression_coefficients(pipelines['LogisticRegression'], class_labels)
 
     print("Model training and evaluation completed.")
 
