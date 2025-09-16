@@ -1,0 +1,50 @@
+# AIAP Interview Presentation
+
+## 1. Title Slide
+- **Name:** [Your Name]  
+- **Title:** AIAP Interview  
+- **Date:** [Insert Date]  
+
+## 2. About Me
+- **Background:** [Insert Background]  
+- **Motivation:** [Insert Motivation]  
+- **Experience:** [Insert Experience]  
+
+## 3. Agenda/Overview
+- [Insert Agenda Points]  
+
+## 4. Problem Statement
+- **Title:** Predicting activity levels of elderly persons in a nursing home  
+
+## 5. Dataset Overview
+- **Source:** [Insert Source]  
+- **Features:** [Insert Features]  
+- **Size:** [Insert Size]  
+- **Sample Table:** [Insert Sample Table Here]  
+
+## 6. Data Preprocessing
+- **Steps:** [Insert Steps]  
+- **Flowchart/Code Snippet:** [Insert Placeholder]  
+
+## 7. Exploratory Data Analysis
+- **Charts:** [Insert Placeholder for Charts]  
+- **Distributions:** [Insert Placeholder]  
+- **Class Imbalance:** [Insert Placeholder]  
+
+## 8. Model Selection
+- **Models Considered:** [Insert Models]  
+- **Rationale:** [Insert Rationale]  
+
+## 9. Model Performance
+- **Macro F1 Scores for Each Model:** [Insert Table/Chart Placeholder]  
+
+## 10. Best Model & Feature Importance
+- [Insert Placeholder for Plot]  
+
+## 11. Error Analysis & Discussion
+- **Strengths/Weaknesses:** [Insert Points]  
+- **Improvements:** [Insert Points]  
+
+## 12. Conclusion & Next Steps
+- **Summary:** [Insert Summary]  
+- **Thank You!**
