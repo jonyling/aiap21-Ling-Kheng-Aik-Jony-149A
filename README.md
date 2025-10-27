@@ -1,5 +1,4 @@
 # aiap21-Ling-Kheng-Aik-Jony-149A
-
 Contains the deliverables for the AIAP Batch 21 Technical Assessment, addressing both Task 1 (Exploratory Data Analysis) and Task 2 (End-to-end Machine Learning Pipeline). 
 
 # AIAP_Batch21_TA
