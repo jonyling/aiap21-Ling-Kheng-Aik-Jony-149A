@@ -1,3 +1,33 @@
-# models/
-TAvenc/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.venv/
+venv/
+env/
 TAvenv/
+TAvenc/
+
+# Notebook and local runtime noise
+.ipynb_checkpoints/
+catboost_info/
+
+# Generated pipeline outputs
+data/processed/
+models/
+
+# Local data should stay off git unless the assessment explicitly requires it.
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
